@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-ui-deployment
+  labels:
+    app: common-ui
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: common-ui
+  template:
+    metadata:
+      labels:
+        app: common-ui
+    spec:
+      containers:
+      - name: common-ui
+        image: zios07/common-ui
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+spec:
+  selector:
+    app: common-ui
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
